@@ -1,0 +1,43 @@
+spring:
+  #自定义打印banner
+  banner:
+    image:
+      location: banner.png
+    location: banner.txt
+    charset: UTF-8
+
+  servlet:
+    multipart:
+      # 文件最大限制
+      max-file-size: 1024MB
+      # 请求最大限制
+      max-request-size: 1024MB
+      enabled: true
+      # 设置文件缓存的临界点,超过则先保存到临时目录,默认为0,所有文件都会进行缓存
+      file-size-threshold: 0
+
+  data:
+    mongodb:
+      uri: mongodb://root:19921226wcj@121.37.131.190:27017/mongo_tool?authSource=admin
+      auto-index-creation: true
+
+server:
+  port: 8090
+  undertow:
+    io-threads: 16
+    worker-threads: 256
+    buffer-size: 1024
+    direct-buffers: true
+
+logging:
+  level:
+    com.rrtv: debug
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+  path: /data/logs/${spring.application.name}
+
+
+
+
+
+
+
