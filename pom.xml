@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.org.wangchangjiu</groupId>
-    <artifactId>mongo-tool</artifactId>
+    <artifactId>mongo-tool-server</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>mongo-tool</name>
+    <name>mongo-tool-server</name>
     <description>mongo 查询工具 web 版本</description>
     <properties>
         <java.version>1.8</java.version>
