@@ -4,9 +4,11 @@ import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,9 @@ public class MongoDatabaseRepository {
     private String connectionString;
 
     private  MongoDatabaseFactory localDatabaseFactory = null;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     private static final Map<String, MongoDatabaseFactory> MONGO_CLIENT_DATABASE_FACTORY_CACHE = new ConcurrentHashMap<>();
 

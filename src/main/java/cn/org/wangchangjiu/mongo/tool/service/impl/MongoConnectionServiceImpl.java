@@ -1,5 +1,7 @@
 package cn.org.wangchangjiu.mongo.tool.service.impl;
 
+import cn.org.wangchangjiu.mongo.tool.common.CommonConstants;
+import cn.org.wangchangjiu.mongo.tool.context.MongoContextHolder;
 import cn.org.wangchangjiu.mongo.tool.vo.result.DataBaseTreeVo;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
@@ -47,22 +49,26 @@ public class MongoConnectionServiceImpl implements MongoConnectionService {
         connection.setName(request.getName());
         connection.setUrl(request.getUrl());
         connection.setHosts(String.join(",", hosts));
+        connection.setAccountId(MongoContextHolder.getUser());
         repository.save(connection);
     }
 
 
     private List<DataBaseTreeVo> queryConnectionList() {
-        List<Connection> connections = repository.findAll();
+        List<Connection> connections = repository.findByAccountId(MongoContextHolder.getUser());
         return CollectionUtils.isEmpty(connections) ? new ArrayList<>() : connections.stream().map(item -> new DataBaseTreeVo(item.getId(), item.getName(), item.getUrl(), false)).collect(Collectors.toList());
     }
 
     @Override
     public void deleteConnection(String id) {
-        repository.deleteById(id);
+        Connection connection = repository.findById(id).orElseThrow(() -> new RuntimeException("资源不存在"));
+        CommonConstants.checkUser(connection.getAccountId());
+        repository.delete(connection);
     }
 
     private List<DataBaseTreeVo> queryDataBases(String connectionId) {
         Connection connection = repository.findById(connectionId).orElseThrow(() -> new RuntimeException("资源不存在"));
+        CommonConstants.checkUser(connection.getAccountId());
         MongoClient mongoClient = MongoClients.create(connection.getUrl());
         List<DataBaseTreeVo> databases = new ArrayList<>();
         mongoClient.listDatabaseNames().forEach(item -> databases.add(new DataBaseTreeVo(connection.getId(), item, connection.getUrl(), false)));
@@ -87,8 +93,8 @@ public class MongoConnectionServiceImpl implements MongoConnectionService {
             }
 
             Connection connection = repository.findById(connectionId).orElseThrow(() -> new RuntimeException("资源不存在"));
+            CommonConstants.checkUser(connection.getAccountId());
             databaseRepository.asyncCreateMongoDataBase(connection.getId(), connection.getUrl(), dataBaseName);
-
             // 获取文档
             return this.queryDocument(connection, dataBaseName);
         }

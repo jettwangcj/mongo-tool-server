@@ -1,5 +1,6 @@
 package cn.org.wangchangjiu.mongo.tool.controller;
 
+import cn.org.wangchangjiu.mongo.tool.common.IgnoreUserAuth;
 import cn.org.wangchangjiu.mongo.tool.service.MongoConnectionService;
 import cn.org.wangchangjiu.mongo.tool.vo.request.SaveConnectionRequest;
 import cn.org.wangchangjiu.mongo.tool.vo.result.ConnectionResultVo;
@@ -65,6 +66,7 @@ public class MongoConnectionController {
 
     @ApiOperation(value = "测试mongo的连接")
     @GetMapping("/test")
+    @IgnoreUserAuth
     public ResultResponse<ConnectionResultVo> testConnection(@RequestParam(value = "url") String url) {
         boolean success = true;
         log.info("测试mongo的连接:{}", url);

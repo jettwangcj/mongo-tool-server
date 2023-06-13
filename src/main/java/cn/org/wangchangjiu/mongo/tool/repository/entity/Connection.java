@@ -20,6 +20,8 @@ public class Connection implements Serializable {
     @Id
     private String id;
 
+    private String accountId;
+
     private String name;
 
     private String hosts;

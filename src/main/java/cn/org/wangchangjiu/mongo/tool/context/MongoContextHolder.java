@@ -3,6 +3,9 @@ package cn.org.wangchangjiu.mongo.tool.context;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Classname MongoContext
  * @Description
@@ -11,18 +14,50 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
  */
 public class MongoContextHolder {
 
-    private static final ThreadLocal<MongoDatabaseFactory> MONGO_DATABASE_THREAD_LOCAL = new TransmittableThreadLocal<>();
+    private static final String MONGO_DATABASE_FACTORY_KEY = "mongo_database_factory_key";
 
-    public static void setMongoDatabaseThreadLocal(MongoDatabaseFactory factory) {
-        MONGO_DATABASE_THREAD_LOCAL.set(factory);
+    private static final String USER_ID_KEY = "user_id_key";
+
+    private static final ThreadLocal<Map<String, Object>> threadLocal = new TransmittableThreadLocal<>();
+
+    private static void set(String key, Object value) {
+        Map<String, Object> map = threadLocal.get();
+        if (map == null) {
+            map = new HashMap<>();
+            threadLocal.set(map);
+        }
+        map.put(key, value);
+    }
+
+    private static Object get(String key){
+        Map<String, Object> map = threadLocal.get();
+        if (map == null) {
+            map = new HashMap<>();
+            threadLocal.set(map);
+        }
+        return map.get(key);
+    }
+
+
+    public static void setMongoDatabaseFactory(MongoDatabaseFactory factory) {
+        set(MONGO_DATABASE_FACTORY_KEY, factory);
     }
 
     public static MongoDatabaseFactory getMongoDatabaseFactory(){
-        return MONGO_DATABASE_THREAD_LOCAL.get();
+        return (MongoDatabaseFactory) get(MONGO_DATABASE_FACTORY_KEY);
     }
 
-    public static void removeMongoDatabaseFactory(){
-        MONGO_DATABASE_THREAD_LOCAL.remove();
+
+    public static void setUser(String userId) {
+        set(USER_ID_KEY, userId);
+    }
+
+    public static String getUser(){
+        return get(USER_ID_KEY) == null ? null : get(USER_ID_KEY).toString();
+    }
+
+    public static void remove(){
+        threadLocal.remove();
     }
 
 }
