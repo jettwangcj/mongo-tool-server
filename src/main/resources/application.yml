@@ -18,14 +18,14 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://root:19921226wcj@121.37.131.190:27017/mongo_tool?authSource=admin
+      uri: 
       auto-index-creation: true
 
   redis:
     database: 0
-    host: r-t4nopimrmixrtt0nl1.redis.singapore.rds.aliyuncs.com
-    password: V5tz6jOdAoaCWTHe
-    port: 6379
+    host: 
+    password: 
+    port: 
     timeout: 1000ms
 
 server:
